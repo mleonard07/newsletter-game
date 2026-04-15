@@ -348,9 +348,13 @@ rows.forEach(keys => {
   rowEl.className = 'kb-row';
   keys.forEach(k => {
     const btn = document.createElement('button');
+    btn.type = 'button';
     btn.className = 'key' + (k === 'ENTER' || k === '⌫' ? ' wide' : '');
     btn.textContent = k;
-    btn.addEventListener('click', () => handleKey(k));
+    btn.addEventListener('mousedown', e => {
+      e.preventDefault(); // keep focus on document, not the button
+      handleKey(k);
+    });
     rowEl.appendChild(btn);
     if (k !== 'ENTER' && k !== '⌫') keyEls[k] = btn;
   });
