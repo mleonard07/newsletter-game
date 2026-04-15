@@ -461,6 +461,13 @@ function revealRow(r, word, result) {
   const tiles = grid[r];
   const delay = 300; // ms per tile
 
+  // Reset state immediately so the user can start typing the next row
+  // while the flip animation plays in the background
+  const won = result.every(res => res === 'correct');
+  currentRow++;
+  currentGuess = [];
+  currentCol = 0;
+
   tiles.forEach((tile, i) => {
     setTimeout(() => {
       tile.style.transition = 'transform 0.15s';
@@ -472,9 +479,8 @@ function revealRow(r, word, result) {
     }, i * delay);
   });
 
-  // After all tiles revealed
+  // After all tiles revealed, update keyboard colors and check win/lose
   setTimeout(() => {
-    // Update keyboard colors
     word.split('').forEach((letter, i) => {
       const keyEl = keyEls[letter];
       if (!keyEl) return;
@@ -486,11 +492,6 @@ function revealRow(r, word, result) {
         keyEl.dataset.state = result[i];
       }
     });
-
-    const won = result.every(r => r === 'correct');
-    currentRow++;
-    currentGuess = [];
-    currentCol = 0;
 
     if (won) {
       endGame(true, r + 1);
