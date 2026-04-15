@@ -471,6 +471,7 @@ function revealRow(r, word, result) {
   currentRow++;
   currentGuess = [];
   currentCol = 0;
+  if (won || currentRow >= 6) gameOver = true; // lock input on win or last guess
 
   tiles.forEach((tile, i) => {
     setTimeout(() => {
@@ -491,7 +492,7 @@ function revealRow(r, word, result) {
       const cur = keyEl.dataset.state || '';
       const priority = { correct: 3, present: 2, absent: 1 };
       if ((priority[result[i]] || 0) > (priority[cur] || 0)) {
-        keyEl.classList.remove(cur);
+        if (cur) keyEl.classList.remove(cur); // guard against empty string throwing SyntaxError
         keyEl.classList.add(result[i]);
         keyEl.dataset.state = result[i];
       }
